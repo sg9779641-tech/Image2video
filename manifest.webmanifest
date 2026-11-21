@@ -1,0 +1,14 @@
+{
+  "name": "Pic2Video — Picture + Prompt",
+  "short_name": "Pic2Video",
+  "description": "Turn a picture plus a text prompt into a short video, on-device or via an AI model.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0d14",
+  "theme_color": "#0b0d14",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" },
+    { "src": "icons/icon.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Pic2Video — Picture + Prompt → Video</title>
+  <meta name="theme-color" content="#0b0d14" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Pic<span>2</span>Video</h1>
+    <p class="tagline">Picture + prompt → video</p>
+  </header>
+
+  <main>
+    <!-- Step 1: Picture -->
+    <section class="card" id="uploadCard">
+      <h2>1 · Choose a picture</h2>
+      <label id="dropzone" for="fileInput">
+        <input type="file" id="fileInput" accept="image/*" hidden />
+        <img id="previewThumb" alt="" hidden />
+        <div id="dropHint">
+          <span class="big">📷</span>
+          <span>Tap to pick a photo or drop it here</span>
+        </div>
+      </label>
+    </section>
+
+    <!-- Step 2: Prompt -->
+    <section class="card" id="promptCard">
+      <h2>2 · Describe the motion</h2>
+      <textarea id="promptInput" rows="3"
+        placeholder="e.g. slow zoom in, gentle drift right, warm sunset glow, cinematic"></textarea>
+      <div class="chips">
+        <button class="chip" data-add="slow zoom in">zoom in</button>
+        <button class="chip" data-add="slow zoom out">zoom out</button>
+        <button class="chip" data-add="pan left">pan left</button>
+        <button class="chip" data-add="pan right">pan right</button>
+        <button class="chip" data-add="drift upward">drift up</button>
+        <button class="chip" data-add="warm golden glow">warm glow</button>
+        <button class="chip" data-add="cool night blue grade">night</button>
+        <button class="chip" data-add="dreamy soft bloom">dreamy</button>
+        <button class="chip" data-add="cinematic letterbox">cinematic</button>
+        <button class="chip" data-add="gentle shake">shake</button>
+      </div>
+    </section>
+
+    <!-- Step 3: Engine -->
+    <section class="card" id="engineCard">
+      <h2>3 · Engine</h2>
+      <div class="seg" role="tablist">
+        <button id="btnLocal" class="seg-btn active" role="tab">On-device (free)</button>
+        <button id="btnAI" class="seg-btn" role="tab">AI model</button>
+      </div>
+
+      <div id="localOptions">
+        <div class="row">
+          <label for="durationRange">Duration <b id="durVal">6s</b></label>
+          <input type="range" id="durationRange" min="2" max="15" value="6" />
+        </div>
+        <div class="row">
+          <label for="fpsSelect">Frame rate</label>
+          <select id="fpsSelect">
+            <option value="24">24 fps (film)</option>
+            <option value="30" selected>30 fps (smooth)</option>
+            <option value="60">60 fps (ultra)</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="aiOptions" hidden>
+        <div class="row">
+          <label for="providerSelect">Provider</label>
+          <select id="providerSelect">
+            <option value="fal">fal.ai (browser-friendly)</option>
+            <option value="replicate">Replicate</option>
+          </select>
+        </div>
+        <div class="row">
+          <label for="modelInput">Model / endpoint id</label>
+          <input type="text" id="modelInput" value="fal-ai/kling-video/v1.5/standard/image-to-video" />
+        </div>
+        <div class="row">
+          <label for="keyInput">API key (stored only on this device)</label>
+          <input type="password" id="keyInput" placeholder="paste key…" autocomplete="off" />
+        </div>
+        <p class="note">On-device rendering is free; AI mode bills your own account. Keys stay in localStorage.</p>
+      </div>
+    </section>
+
+    <button id="generateBtn" class="primary" disabled>Generate video</button>
+
+    <section class="card" id="resultCard" hidden>
+      <h2>Result</h2>
+      <div id="statusMsg" class="status"></div>
+      <video id="resultVideo" controls playsinline loop hidden></video>
+      <a id="downloadBtn" class="primary download" download="pic2video.webm" hidden>⬇ Save video</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>Install: Android → menu “Install app” · iPhone → Share → “Add to Home Screen”</p>
+  </footer>
+
+  <canvas id="renderCanvas" hidden></canvas>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>
